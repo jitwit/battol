@@ -10,9 +10,7 @@
 
 ;; configuration to log in to twitch
 (define *oauth-token*
-  (symbol->string
-   (with-input-from-file "ringo-token.txt"
-     read)))
+  (file->string "ringo-token.txt"))
 
 (define *username*
   "jingo_ringo")
