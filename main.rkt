@@ -326,7 +326,10 @@
 		  person
 		  (/ (floor (* 10 (ppn 3.66 1))) 10))))
        (`("?truth" . ,args)
-	(let* ((channel (if (null? args) where (string-join args)))
+	(let* ((channel (if (null? args)
+                            ; get rid of # in #channel
+                            (substring where 1 (string-length where))
+                            (string-join args)))
                (result (chatter-count channel)))
 	  (format "truthfully, there are ~a viewers in ~a"
                   (lookup result 'chatter_count)
@@ -569,7 +572,8 @@
 (define (main)
   (run-it 1))
 
-(main)
+;; (main)
+
 
 
 

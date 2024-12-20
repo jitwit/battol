@@ -16,6 +16,12 @@
   (response-json
    (get (string-append "https://api.chess.com/pub/player/" who))))
 
+(define (chatter-count who)
+  (response-json
+   (get (string-append "https://tmi.twitch.tv/group/user/"
+                       who
+                       "/chatters"))))
+
 (define (player-stats who)
   (response-json
    (get (string-append "https://api.chess.com/pub/player/" who "/stats"))))
