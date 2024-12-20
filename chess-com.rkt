@@ -24,6 +24,10 @@
   (let ((stats (player-stats who)))
     (lookup stats 'chess_blitz 'last)))
 
+(define (player-bullet-rating who)
+  (let ((stats (player-stats who)))
+    (lookup stats 'chess_bullet)))
+
 (define (player-rapid-rating who)
   (let ((stats (player-stats who)))
     (lookup stats 'chess_rapid 'last)))
