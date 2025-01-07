@@ -536,9 +536,9 @@
   (irc-send-command c "CAP REQ" ":twitch.tv/commands")
   (irc-send-command c "CAP REQ" ":twitch.tv/tags")
   (irc-join-channel c (string-append "#" *username*))
-  (irc-join-channel c "#spennythompson")
   (irc-join-channel c "#badchessgoodvibes")
-  (irc-join-channel c "#gorey_hole"))
+  (irc-join-channel c "#gorey_hole")
+  (irc-join-channel c "#spennythompson"))
 
 ;; main loop
 (define (gogo)
