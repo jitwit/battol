@@ -22,25 +22,6 @@
 (define irl-semaphore
   (make-semaphore 1))
 
-;; handle commands and return response text
-(define (response-message message)
-  (match message
-    ((irc-message tags pref "PRIVMSG" `(,where ,what) message-whole)
-     (define who
-       (cdr (assq 'display-name (irc-message-tags message))))
-     (match (string-split what)
-       (_ #f))) ;; unrecognized command/not applicable
-    (_ #f))) ;; other types of messages
-
-(define (message-tag tag message)
-  (assoc tag (irc-message-tags message)))
-
-(define (chatter-count who)
-  (let ((response (get (string-append "https://tmi.twitch.tv/group/user/"
-                                      (string-downcase who)
-                                      "/chatters"))))
-    (response-json response)))
-
 ;; connect to twitch and grab connection in twitch-connection parameter
 (define (boot)
   (define-values (c ready)
@@ -58,15 +39,14 @@
   (irc-join-channel c (string-append "#" *username*)))
 
 (define (leave-channel channel)
-  (assert (and location (equal? channel location)))
-  (irc-part-channel twitch-connection (string-append "#" channel))
-  (set! location #f))
+  (irc-part-channel twitch-connection (string-append "#" channel)))
 
 (define (join-channel channel)
   (when (string? location)
     (leave-channel location))
-  (irc-join-channel twitch-connection (string-append "#" channel))
-  (set! location channel))
+  (set! location channel)
+  (irc-join-channel twitch-connection
+                    (string-append "#" channel)))
 
 (define (send-message message)
   (irc-send-message twitch-connection (string-append "#" location) message))
@@ -160,3 +140,4 @@
 
 ;; Unicode Character “⠀” (U+2800) --- how diesiraeswe gets whitespace
 ;; braille empty or something
+
