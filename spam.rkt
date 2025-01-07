@@ -3,10 +3,8 @@
 (require racket/async-channel
          (except-in srfi/1 delete)
          net/http-easy
-
          "irc.rkt"
          "outils.rkt")
-
 
 ;; configuration to log in to twitch
 (define *oauth-token*
@@ -43,20 +41,6 @@
                                       "/chatters"))))
     (response-json response)))
 
-;; respond to applicable messages
-(define (respond-to-message message)
-  (write message) (newline)
-  (match message
-    ;; respond to commands
-    ((irc-message _ _ "PRIVMSG" `(,where ,what)  _)
-     (define response
-       ;; these are potential commands, so use the semaphore
-       (call-with-semaphore irl-semaphore
-                            (thunk (response-message message))))
-     (when response
-       (irc-send-message twitch-connection where response)))
-    (_ (void))))
-
 ;; connect to twitch and grab connection in twitch-connection parameter
 (define (boot)
   (define-values (c ready)
@@ -74,14 +58,15 @@
   (irc-join-channel c (string-append "#" *username*)))
 
 (define (leave-channel channel)
-  (irc-part-channel twitch-connection (string-append "#" channel)))
+  (assert (and location (equal? channel location)))
+  (irc-part-channel twitch-connection (string-append "#" channel))
+  (set! location #f))
 
 (define (join-channel channel)
   (when (string? location)
     (leave-channel location))
-  (set! location channel)
-  (irc-join-channel twitch-connection
-                    (string-append "#" channel)))
+  (irc-join-channel twitch-connection (string-append "#" channel))
+  (set! location channel))
 
 (define (send-message message)
   (irc-send-message twitch-connection (string-append "#" location) message))
@@ -128,6 +113,10 @@
   "mcknzRingoBunny")
 (define rare-boi
   "domina105RARELIMITEDRINGBUNNY")
+(define golden-card
+  "domina105GOLDENCARD")
+(define tot-pls
+  "domina105TOTPLS")
 
 (define (quick-fire message n)
   (for ((i (iota n)))
@@ -153,9 +142,17 @@
   (define n (quotient 500 (+ 1 (string-length s))))
   (string-join (make-list n s)))
 
+(define (squared boundary . centers)
+  (define boundary-message (string-join (make-list 3 boundary)))
+  (for-each (lambda (center-piece)
+              (send-message boundary-message)
+              (send-message (string-join (list boundary center-piece boundary))))
+            centers)
+  (send-message boundary-message))
+
 (define (attack!)
-  (let ((msg (repeated rare-boi)))
-    (fire msg 30 0.2)))
+  (let ((msg (repeated ezwin)))
+    (fire msg 100 0.2)))
 
 (define (creb)
   (boot)
@@ -163,4 +160,3 @@
 
 ;; Unicode Character “⠀” (U+2800) --- how diesiraeswe gets whitespace
 ;; braille empty or something
-
