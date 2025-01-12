@@ -70,7 +70,7 @@
 (define ringolicious
   "domina105RINGOLICIOUS")
 (define rolly-boi
-  "domina105RINGOROLLYBOIJR")
+  "tinxRINGOROLLYBOI")
 (define uwu
   "domina105RINGOUWUWUWUUWUWUW")
 (define irl-ezwin
@@ -88,7 +88,7 @@
 (define menacing
   "domina105MENACING")
 (define luci-dance
-  "luvtinDANCE")
+  "tinxDANCE")
 (define ringo-bunny
   "mcknzRingoBunny")
 (define rare-boi
@@ -99,6 +99,8 @@
   "domina105TOTPLS")
 (define work-call
   "domina105WORKCALL")
+(define angi
+  "tinxANGI")
 
 (define (quick-fire message n)
   (for ((i (iota n)))
