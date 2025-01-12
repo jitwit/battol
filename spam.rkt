@@ -97,6 +97,8 @@
   "domina105GOLDENCARD")
 (define tot-pls
   "domina105TOTPLS")
+(define work-call
+  "domina105WORKCALL")
 
 (define (quick-fire message n)
   (for ((i (iota n)))
@@ -130,14 +132,33 @@
             centers)
   (send-message boundary-message))
 
+(define (L-inf x y)
+  (apply max (map abs (map - x y))))
+
+(define (supersquare . layers)
+  (define N (- (* 2 (length layers)) 1))
+  (define C (make-list 2 (- (length layers) 1)))
+  (when (<= 0 (car C) 5)
+    (for ((x (range N)))
+      (let ((msg ""))
+        (for ((y (range N)))
+          (set! msg (string-append msg
+                                   " "
+                                   (list-ref layers
+                                             (L-inf (list x y) C)))))
+        (send-message msg)))))
+
 (define (attack!)
   (let ((msg (repeated ezwin)))
     (fire msg 100 0.2)))
 
-(define (creb)
+(define (go)
   (boot)
-  (join-channel "DOMINANTCRAB"))
+  ;; (join-channel "DOMINANTCRAB")
+  (join-channel "TinaPalooza"))
+
+(go)
+
 
 ;; Unicode Character “⠀” (U+2800) --- how diesiraeswe gets whitespace
 ;; braille empty or something
-(creb)
