@@ -182,14 +182,10 @@
 
 ;; configuration to log in to twitch
 (define *oauth-token*
-  (symbol->string
-   (with-input-from-file "token.txt"
-     read)))
+  (file->string "token.txt"))
 
 (define *username*
-  (symbol->string
-   (with-input-from-file "user.txt"
-     read)))
+  (file->string "user.txt"))
 
 ;; network connection to twitch irc network
 (define twitch-connection #f)
@@ -542,11 +538,10 @@
 
 ;; main loop
 (define (gogo)
-  (let loop ()
-    (define message
-      (async-channel-get (irc-connection-incoming twitch-connection)))
-    (thread (thunk (respond-to-message message)))
-    (loop)))
+  (define message
+    (async-channel-get (irc-connection-incoming twitch-connection)))
+  (thread (thunk (respond-to-message message)))
+  (gogo))
 
 (define (run-it retry-interval)
   (with-handlers ((exn:fail:network:errno?
